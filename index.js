@@ -243,6 +243,9 @@ app.post("/api/queue", async (req, res) => {
                         upvoted[id] = false
                         const newQueueItem = {uri: song_uri, song_id, name, artist, votes: 0, upvoted, downvoted}
                         queue.push(newQueueItem)
+                        queue = queue.sort((a, b) => {
+                            return b.votes - a.votes
+                        })
                         const queueString = JSON.stringify(queue)
                         console.log(queueString)
                         db.query(`UPDATE sessions SET queue = '${queueString}' WHERE session_id = '${session_id}'`, (error2, result2) => {
