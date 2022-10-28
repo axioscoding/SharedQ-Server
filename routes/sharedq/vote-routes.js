@@ -1,5 +1,9 @@
 module.exports = (app, db, wss, WebSocket) => {
     
+
+
+    //POST /api/vote
+    //Down/Upvote a certain queue item
     app.post("/api/vote", (req, res) => {
         console.log("POST /api/vote")
         const {session_id, song_id, amount, id, vote_state} = req.body
