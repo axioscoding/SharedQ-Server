@@ -88,3 +88,6 @@ sw.*
 
 # Vim swap files
 *.swp
+
+# sensitive data
+common/constants.js
