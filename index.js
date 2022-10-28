@@ -57,9 +57,9 @@ const pollSessions = () => {
             if(session.next_song !== undefined && session.next_song !== null){
                 axios.get("https://api.spotify.com/v1/me/player/queue", config).then(res => {
                     const spotify_queue = res.data.queue
-                    
+                    console.log("Hkdjgbfhlkisjhgbolsfhdgoöisdjfhgoipöshfgdoöisfdhgöoishdg")
                     //Check if the next song is not in the queue anymore
-                    if(spotify_queue.filter(elem => elem.id === session.next_song.id).length === 0){
+                    if(spotify_queue.filter(elem => elem.id === session.next_song.song_id).length === 0){
                         //NEXT SONG NOT IN QUEUE
                         if(session.queue.length > 0){
                             //Calculate and add the new next song
