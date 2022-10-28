@@ -71,4 +71,48 @@ module.exports = (app, db) => {
     
     
     })
+
+
+    //GET /api/session/name
+    //Change session name
+    app.get("/api/session/name", (req, res) => {
+        if(req.query.session_id !== undefined && req.query.session_id !== null){
+            const {session_id} = req.query
+            console.log(session_id)
+            const text = `SELECT session_name FROM sessions WHERE session_id = $1;`
+            const values = [session_id]
+            db.query(text, values, (err, response) => {
+                if(err){
+                    console.log(err.stack)
+                    res.status(500).json({error: "Database error"})
+                }else{
+                    res.status(200).json({name: response.rows[0].session_name})
+                }   
+            })
+        }else{
+            console.log("Missing session");
+            res.status(500).json({error: "missing session"})
+        }
+    })
+
+
+    //POST /api/session/name
+    //Change session name
+    app.post("/api/session/name", (req, res) => {
+        
+        const {session_id, name} = req.body
+        console.log("SET SESSION NAME:")
+        console.log(name)
+        const text = `UPDATE sessions SET session_name = $1 WHERE session_id = $2;`
+        const values = [name, session_id]
+
+        db.query(text, values, (err, response) => {
+            if(err){
+                console.log(err.stack)
+                res.status(500).json({error: "Database error"})
+            }else{
+                res.status(200).json({name})
+            }   
+        })
+    })
 }
