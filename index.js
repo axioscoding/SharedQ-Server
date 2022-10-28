@@ -12,13 +12,27 @@ const QRCode = require("qrcode")
 
 const wss = new WSServer({server: server});
 server.on('request', app);
-  
 
+
+//PRODUCTION
+/*
 const client_id = "69d25c690d5b4a00ab63d45e015b5567";
 const client_secret = "3423c76717d44543bf75897cf919fde4";
-const redirect_uri = "http://192.168.178.34:3000/queue";
-const BASE_URL = "http://192.168.178.34:3001"
+const redirect_uri = "http://213.136.71.55/queue";          //213.136.71.55   port 3000
+const BASE_URL = "http://213.136.71.55";                    //213.136.71.55   port 3000    
+const LOCAL_URL = "localhost";
+const PORT_STRING = "3001";
+const PORT = 3001;
+*/
 
+//DEV
+const client_id = "69d25c690d5b4a00ab63d45e015b5567";
+const client_secret = "3423c76717d44543bf75897cf919fde4";
+const redirect_uri = "http://localhost:3000/queue";          //213.136.71.55   port 3000
+const BASE_URL = "http://localhost:3000";                    //213.136.71.55   port 3000    
+const LOCAL_URL = "localhost";
+const PORT_STRING = "3001";
+const PORT = 3001;
 
 wss.on('connection', function connection(ws) {
  
@@ -110,7 +124,7 @@ app.post("/api/session", async (req, res) => {
     console.log("SESSION")
 
     const id = nanoid.customAlphabet("0123456789", 6)()
-    const toEncode = "http://192.168.178.34:3000/queue/" + id
+    const toEncode = BASE_URL + "/queue/" + id
 
     QRCode.toDataURL(toEncode, (err, url) => {
         if(err){
@@ -669,7 +683,7 @@ app.get("/api/test", (req, res) => {
 
 app.get("/api/qrcode", (req, res) => {
     const {session_id} = req.query
-    const toEncode = "http://192.168.178.34:3000/queue/" + session_id
+    const toEncode = BASE_URL + "/queue/" + session_id
 
     QRCode.toDataURL(toEncode, (err, url) => {
         if(err){
@@ -693,4 +707,4 @@ pollSongStatus()
 
 
 
-server.listen(3001, "192.168.178.34", () => {console.log("listening on 3001")})
+server.listen(PORT, LOCAL_URL, () => {console.log(`Listening on ${PORT_STRING}`)})
