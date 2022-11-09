@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 //PRODUCTION
 /*
 const client_id = "69d25c690d5b4a00ab63d45e015b5567";
@@ -17,6 +18,9 @@ const BASE_URL = "http://192.168.178.34:3000";                    //213.136.71.5
 const LOCAL_URL = "192.168.178.34";
 const PORT_STRING = "3001";
 const PORT = 3001;
+=======
+//sensitive data
+>>>>>>> edc69db7f83c0352695445c840044a0181e2e520
 
 
 module.exports = {
