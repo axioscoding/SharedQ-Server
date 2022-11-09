@@ -115,4 +115,20 @@ module.exports = (app, db) => {
             }   
         })
     })
+
+    //POST /api/session/delete
+    //Delete session
+    app.post("/api/session/delete", (req, res) => {
+        if(!req.body.session_id) res.status(400).json({error: "Missing session id"})
+        const {session_id} = req.body
+        const text = `DELETE FROM sessions WHERE session_id = $1;`
+        const values = [session_id]
+        db.query(text, values, (err, response) => {
+            if(err){
+                res.status(404).json({error: "Invalid session id!"})
+            }else{
+                res.status(200).json({session_id})
+            }
+        })
+    })
 }
