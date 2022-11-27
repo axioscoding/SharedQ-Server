@@ -14,12 +14,12 @@ module.exports = (app, db) => {
         }else{
             const {session_id} = req.query
 
-            db.query(`SELECT queue, next_song, qrcode FROM sessions WHERE session_id = '${session_id}';`, (error, result) => {
+            db.query(`SELECT queue, next_song, qrcode, max_downvotes FROM sessions WHERE session_id = '${session_id}';`, (error, result) => {
                 if(error) console.log(error.stack)
                 if(result.rowCount > 0){
-                    let {queue, next_song, qrcode} = result.rows[0]
+                    let {queue, next_song, qrcode, max_downvotes} = result.rows[0]
 
-                    res.status(200).json({queue, next_song, qrcode});
+                    res.status(200).json({queue, next_song, qrcode, maxvotes: max_downvotes});
 
 
                 }else{
@@ -39,7 +39,7 @@ module.exports = (app, db) => {
 
         //TODO: Check if generated id already exists
 
-        QRCode.toDataURL(toEncode, (err, url) => {
+        QRCode.toDataURL(toEncode, {color: {dark: "#1ed760", light: "#181818"}}, (err, url) => {
             if(err){
                 const text = `INSERT INTO sessions(session_id, queue, next_song, spotify_auth_token, spotify_refresh_token, time_created, qrcode) VALUES($1, $2, $3, $4, $5, now(), $6);`
                 const values = [id, [], null, req.body.auth_token, req.body.refresh_token, "missing_qr_code"]
@@ -112,6 +112,23 @@ module.exports = (app, db) => {
                 res.status(500).json({error: "Database error"})
             }else{
                 res.status(200).json({name})
+            }   
+        })
+    })
+
+    //POST /api/session/maxvotes
+    //Update the amount of downvotes needed to kick a song from the queue
+    app.post("/api/session/maxvotes", (req, res) => {
+        const {session_id, maxvotes} = req.body
+        const text = `UPDATE sessions SET max_downvotes = $1 WHERE session_id = $2;`
+        const values = [maxvotes, session_id]
+
+        db.query(text, values, (err, response) => {
+            if(err){
+                console.log(err.stack)
+                res.status(500).json({error: "Database error"})
+            }else{
+                res.status(200).json({maxvotes})
             }   
         })
     })

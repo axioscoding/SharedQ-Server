@@ -8,12 +8,12 @@ module.exports = (app, db, wss, WebSocket) => {
         console.log("POST /api/vote")
         const {session_id, song_id, amount, id, vote_state} = req.body
         console.log(req.body)
-        db.query(`SELECT queue FROM sessions WHERE session_id = '${session_id}';`, (error, result) => {
+        db.query(`SELECT queue, max_downvotes FROM sessions WHERE session_id = '${session_id}';`, (error, result) => {
             if(error){
                 res.status(500).json({error: "Database error"})
             }else{
                 if(result.rowCount > 0){
-                    let {queue} = result.rows[0]
+                    let {queue, max_downvotes} = result.rows[0]
                     const index = queue.findIndex(elem => elem.song_id === song_id)
                     if(index === null){
                         res.status(400).json({error: "Bad request"})
@@ -46,12 +46,18 @@ module.exports = (app, db, wss, WebSocket) => {
                                 queue[index].votes--
                             }
                         }
+                        
     
                         console.log(vote_state)
                         console.log(queue[index])
                         console.log(queue[index].upvoted[id_string])
                         console.log(queue)
                         console.log("VOOOOOTTTEEE")
+                        if(max_downvotes > 0){
+                            if(queue[index].votes <= -max_downvotes){
+                                queue.splice(index, 1)
+                            }
+                        }
                         queue = queue.sort((a, b) => {
                             return b.votes - a.votes
                         })
