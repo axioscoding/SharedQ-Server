@@ -1,9 +1,10 @@
 const axios = require("axios")
 const constants = require("./common/constants")
-const {calcNextSong, addNextSongToSpotify} = require("./common/functions")
+const {calcNextSong, addNextSongToSpotify, getSpotifyDevices} = require("./common/functions")
 const db = require("./db")
 const WSServer = require("ws").Server
 const {WebSocket} = require("ws")
+
 const server = require("http").createServer()
 const app = require("./express-server")
 
@@ -143,6 +144,7 @@ app.get("/api/test", (req, res) => {
     console.log("test")
     res.status(200).json("ok")
 })
+
 
 
 setInterval(() => {
