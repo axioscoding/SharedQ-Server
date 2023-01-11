@@ -7,7 +7,7 @@ Missing /common/constants.js for privacy reasons.
 ## Starting the server
 
 ```bash
-#start the server with nodemon
+# start the server with nodemon
 
 $ npm run start
 ```
