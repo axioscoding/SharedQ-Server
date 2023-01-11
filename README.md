@@ -2,7 +2,7 @@
 
 Server for SharedQ made with node and express.
 
-Missing /common/constants.js for privacy reasons.
+Missing ./common/constants.js for privacy reasons.
 
 ## Starting the server
 
